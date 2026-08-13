@@ -1,0 +1,411 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Light Mode Default */
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-dark: #f8fafc;
+    --bg-panel: #ffffff;
+    --bg-card: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark Mode */
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
+        --bg-dark: #0f172a;
+        --bg-panel: #1e293b;
+        --bg-card: #0b1120;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    display: block;
+    padding: 12px 24px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+h1.page-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: var(--bg-panel);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.card-value.text-success { color: var(--success); }
+.card-value.text-danger { color: var(--danger); }
+.card-value.text-warning { color: var(--warning); }
+
+/* Tables */
+.table-container {
+    background-color: var(--bg-panel);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-danger { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.badge-success { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    color-scheme: dark; /* Fixes native icons like calendar/clock in dark mode */
+}
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+.btn-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+.btn-danger:hover { background-color: var(--danger); color: white; }
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    color: var(--success);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+/* Hide Number Spinners */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Align numeric inputs to right for better readability */
+.text-right {
+    text-align: right;
+}
+
+/* Flatpickr Customization - Minimalist Elegant (Reference UI) */
+.flatpickr-calendar {
+    font-family: 'Inter', sans-serif !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 20px !important;
+    padding: 20px 10px 10px 10px !important;
+    width: 320px !important;
+}
+
+/* Match the little pointer arrows to the background */
+.flatpickr-calendar.arrowTop:before, 
+.flatpickr-calendar.arrowTop:after {
+    border-bottom-color: var(--bg-card) !important;
+}
+.flatpickr-calendar.arrowBottom:before, 
+.flatpickr-calendar.arrowBottom:after {
+    border-top-color: var(--bg-card) !important;
+}
+
+/* Header Section */
+.flatpickr-months {
+    background: transparent !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 15px !important;
+    position: relative;
+}
+
+/* Month/Year Dropdowns (Make them look like plain text) */
+.flatpickr-current-month {
+    padding-top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: transparent !important;
+    color: var(--text-main) !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+    appearance: none !important; 
+    -webkit-appearance: none !important;
+    padding: 0 5px !important;
+    pointer-events: none !important;
+    border: none !important;
+}
+.flatpickr-current-month .numInputWrapper {
+    width: 60px !important;
+}
+.flatpickr-current-month .numInputWrapper input {
+    color: var(--text-main) !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+}
+.flatpickr-current-month .numInputWrapper span {
+    display: none !important;
+}
+
+/* The < and > arrows (Circular buttons) */
+.flatpickr-months .flatpickr-prev-month, 
+.flatpickr-months .flatpickr-next-month {
+    background: var(--bg-panel) !important;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 8px !important;
+    top: 0px !important;
+    fill: var(--text-main) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+.flatpickr-months .flatpickr-prev-month {
+    left: 15px !important;
+}
+.flatpickr-months .flatpickr-next-month {
+    right: 15px !important;
+}
+.flatpickr-months .flatpickr-prev-month:hover, 
+.flatpickr-months .flatpickr-next-month:hover {
+    background: var(--primary) !important;
+    fill: white !important;
+}
+
+/* Weekdays */
+.flatpickr-weekdays {
+    background: transparent !important;
+    height: auto !important;
+    margin-bottom: 10px !important;
+}
+span.flatpickr-weekday {
+    color: var(--text-muted) !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Day Styling */
+.flatpickr-days {
+    width: 100% !important;
+}
+.dayContainer {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    gap: 4px;
+    justify-content: space-around !important;
+}
+.flatpickr-day {
+    color: var(--text-main) !important;
+    border-radius: 12px !important;
+    border: 1px solid transparent !important;
+    margin: 0 !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    line-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Hover state */
+.flatpickr-day:hover, .flatpickr-day:focus {
+    background: var(--bg-panel) !important;
+    border-color: var(--border) !important;
+}
+
+/* "Today" styling (Outline like the image '7') */
+.flatpickr-day.today {
+    background: transparent !important;
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+}
+.flatpickr-day.today:hover {
+    background: var(--bg-panel) !important;
+}
+
+/* Selected Day (Solid blue like the image '10') */
+.flatpickr-day.selected {
+    background: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Muted / Out of month days */
+.flatpickr-day.flatpickr-disabled, 
+.flatpickr-day.prevMonthDay, 
+.flatpickr-day.nextMonthDay {
+    color: var(--text-muted) !important;
+    opacity: 0.3 !important;
+    font-weight: 400 !important;
+}

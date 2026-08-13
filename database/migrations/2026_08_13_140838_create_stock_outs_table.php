@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('stock_outs', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_no')->unique();
+            $table->date('date');
+            $table->string('customer_name')->nullable();
+            $table->decimal('total', 15, 2)->default(0);
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('stock_outs');
