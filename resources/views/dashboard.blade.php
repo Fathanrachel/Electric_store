@@ -1,7 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="page-title">Dashboard</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="page-title" style="margin-bottom: 0;">Dashboard</h1>
+        
+        <form action="{{ route('dashboard') }}" method="GET">
+            <select name="filter" onchange="this.form.submit()" class="form-control" style="width: auto; padding: 8px 15px; border-radius: 8px; cursor: pointer;">
+                <option value="weekly" {{ $filter == 'weekly' ? 'selected' : '' }}>Mingguan (Minggu Ini)</option>
+                <option value="monthly" {{ $filter == 'monthly' ? 'selected' : '' }}>Bulanan (Bulan Ini)</option>
+            </select>
+        </form>
+    </div>
 
     <div class="dashboard-cards">
         <div class="card">
@@ -10,13 +19,13 @@
         </div>
         
         <div class="card">
-            <div class="card-title">Penjualan Hari Ini</div>
-            <div class="card-value text-success">Rp {{ number_format($todaySales, 0, ',', '.') }}</div>
+            <div class="card-title">{{ $salesTitle }}</div>
+            <div class="card-value text-success">Rp {{ number_format($salesAmount, 0, ',', '.') }}</div>
         </div>
     </div>
     
     <div class="card" style="margin-bottom: 40px;">
-        <div class="card-title" style="margin-bottom: 20px;">Grafik Penjualan (7 Hari Terakhir)</div>
+        <div class="card-title" style="margin-bottom: 20px;">{{ $chartTitle }}</div>
         <div style="position: relative; height: 300px; width: 100%;">
             <canvas id="salesChart"></canvas>
         </div>

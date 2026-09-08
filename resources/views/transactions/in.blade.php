@@ -1,6 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+/* Select2 Dark Theme Overrides */
+.select2-container--default .select2-selection--single {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-main) !important;
+    line-height: normal !important;
+    padding-left: 14px !important;
+    font-family: 'Inter', sans-serif;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+    right: 10px !important;
+}
+.select2-dropdown {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+}
+.select2-search--dropdown .select2-search__field {
+    background-color: var(--bg-panel) !important;
+    border: 1px solid var(--primary) !important;
+    color: var(--text-main) !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+    outline: none !important;
+}
+.select2-results__option {
+    color: var(--text-main) !important;
+    padding: 10px 14px !important;
+    font-family: 'Inter', sans-serif;
+}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+.select2-container--default .select2-results__option--selected {
+    background-color: var(--bg-panel) !important;
+}
+</style>
     <h1 class="page-title">Barang Masuk (Pembelian)</h1>
 
     <div class="card">
@@ -34,32 +82,37 @@
                         </tr>
                     </thead>
                     <tbody id="itemsBody">
-                        <tr class="item-row">
-                            <td>
-                                <input type="text" name="items[0][product_name]" class="form-control product-input" list="productList" required placeholder="Ketik nama barang..." oninput="calculateRow(this)">
-                                <datalist id="productList">
-                                    @foreach($products as $product)
-                                        <option value="{{ $product->name }}" data-price="{{ $product->purchase_price }}">
-                                    @endforeach
-                                </datalist>
-                            </td>
-                            <td>
-                                <input type="number" name="items[0][qty]" class="form-control qty-input text-right" value="1" min="1" required oninput="calculateRow(this, 'qty')">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control price-display text-right" value="0" required oninput="calculateRow(this, 'price')">
-                                <input type="hidden" name="items[0][price]" class="price-val" value="0">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control subtotal-display text-right" value="0" required oninput="calculateRow(this, 'subtotal')">
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger" onclick="removeRow(this)">X</button>
-                            </td>
-                        </tr>
+                        <!-- Rows injected by JS -->
                     </tbody>
                 </table>
             </div>
+
+            <!-- Template for a new row -->
+            <template id="rowTemplate">
+                <tr class="item-row">
+                    <td>
+                        <select class="form-control product-select" required onchange="calculateRow(this, 'price')">
+                            <option value="">-- Ketik / Pilih Barang --</option>
+                            @foreach($products as $product)
+                                <option value="{{ $product->name }}" data-price="{{ $product->purchase_price }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control qty-input text-right" value="1" min="1" required oninput="calculateRow(this, 'qty')">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control price-display text-right" value="0" required oninput="calculateRow(this, 'price')">
+                        <input type="hidden" class="price-val" value="0">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control subtotal-display text-right" value="0" required oninput="calculateRow(this, 'subtotal')">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="removeRow(this)">X</button>
+                    </td>
+                </tr>
+            </template>
 
             <button type="button" class="btn" style="background-color: var(--border); color: white; margin-bottom: 20px;" onclick="addRow()">+ Tambah Barang Lain</button>
             
@@ -73,8 +126,14 @@
 @endsection
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    let rowIndex = 1;
+    let rowIndex = 0;
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        addRow();
+    });
     
     function parseRupiah(text) {
         if (!text) return 0;
@@ -88,7 +147,8 @@
     
     function calculateRow(element, source = 'price') {
         const row = element.closest('.item-row');
-        const input = row.querySelector('.product-input');
+        if (!row) return; // sometimes event fires before row is fully ready
+        const select = row.querySelector('.product-select');
         const qtyInput = row.querySelector('.qty-input');
         
         const priceDisplay = row.querySelector('.price-display');
@@ -97,18 +157,15 @@
         
         let qty = parseFloat(qtyInput.value) || 0;
         
-        // Auto fill price on input if match
-        if(element.classList.contains('product-input')) {
-            const list = document.getElementById('productList');
-            const options = list.options;
-            for (let i = 0; i < options.length; i++) {
-                if (options[i].value === input.value) {
-                    let p = options[i].getAttribute('data-price');
-                    priceDisplay.value = formatRupiah(p);
-                    priceVal.value = p;
-                    source = 'price';
-                    break;
-                }
+        // Find selected option to get data attributes
+        let selectedOption = select.options[select.selectedIndex];
+        
+        if (selectedOption && selectedOption.value !== "") {
+            // If source is the dropdown changing, update the price
+            if (source === 'price' && document.activeElement !== priceDisplay) {
+                let p = selectedOption.getAttribute('data-price') || 0; // fallback to 0 for newly typed items
+                priceDisplay.value = formatRupiah(p);
+                priceVal.value = p;
             }
         }
         
@@ -152,29 +209,50 @@
     
     function addRow() {
         const tbody = document.getElementById('itemsBody');
-        const firstRow = tbody.querySelector('.item-row');
-        const newRow = firstRow.cloneNode(true);
+        const template = document.getElementById('rowTemplate');
+        const clone = template.content.cloneNode(true);
         
-        // Update names to have correct index
-        newRow.querySelector('.product-input').name = `items[${rowIndex}][product_name]`;
-        newRow.querySelector('.product-input').value = "";
+        // Update names for array submission
+        clone.querySelector('.product-select').name = `items[${rowIndex}][product_name]`;
+        clone.querySelector('.qty-input').name = `items[${rowIndex}][qty]`;
+        clone.querySelector('.price-val').name = `items[${rowIndex}][price]`;
         
-        newRow.querySelector('.qty-input').name = `items[${rowIndex}][qty]`;
-        newRow.querySelector('.qty-input').value = "1";
+        tbody.appendChild(clone);
         
-        newRow.querySelector('.price-val').name = `items[${rowIndex}][price]`;
-        newRow.querySelector('.price-val').value = "0";
+        // Initialize Select2 on the newly added select element
+        const newRow = tbody.lastElementChild;
+        const selectEl = $(newRow.querySelector('.product-select'));
+        selectEl.select2({
+            width: '100%',
+            dropdownAutoWidth: true,
+            tags: true, // Allow creating new products by typing
+            createTag: function (params) {
+                var term = $.trim(params.term);
+                if (term === '') return null;
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                }
+            }
+        });
         
-        newRow.querySelector('.price-display').value = "0";
-        newRow.querySelector('.subtotal-display').value = "0";
+        // Re-bind onchange event for Select2 since it hides the original select
+        selectEl.on('change', function() {
+            calculateRow(this, 'price');
+        });
         
-        tbody.appendChild(newRow);
         rowIndex++;
     }
     
     function removeRow(btn) {
         const tbody = document.getElementById('itemsBody');
         if (tbody.querySelectorAll('.item-row').length > 1) {
+            // Destroy Select2 instance before removing to prevent memory leaks
+            const selectEl = $(btn.closest('.item-row')).find('.product-select');
+            if (selectEl.hasClass("select2-hidden-accessible")) {
+                selectEl.select2('destroy');
+            }
             btn.closest('.item-row').remove();
             calculateGrandTotal();
         } else {

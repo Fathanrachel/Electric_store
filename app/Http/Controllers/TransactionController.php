@@ -16,7 +16,7 @@ class TransactionController extends Controller
 {
     public function stockIn()
     {
-        $products = Product::all();
+        $products = Product::active()->get();
         return view('transactions.in', compact('products'));
     }
 
@@ -46,11 +46,12 @@ class TransactionController extends Controller
                 $product = Product::firstOrCreate(
                     ['name' => $item['product_name']],
                     [
-                        'unit' => 'pcs',
+                        'unit'           => 'pcs',
                         'purchase_price' => $item['price'],
-                        'selling_price' => 0,
-                        'min_stock' => 5,
-                        'current_stock' => 0,
+                        'selling_price'  => 0,
+                        'min_stock'      => 5,
+                        'current_stock'  => 0,
+                        'is_active'      => true,
                     ]
                 );
 
@@ -79,7 +80,7 @@ class TransactionController extends Controller
 
     public function stockOut()
     {
-        $products = Product::where('current_stock', '>', 0)->get();
+        $products = Product::active()->where('current_stock', '>', 0)->get();
         return view('transactions.out', compact('products'));
     }
 

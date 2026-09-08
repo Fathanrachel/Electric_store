@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gudang Listrik - Pencatatan Stok</title>
+    <title>Lampu Mitsuyama - Pencatatan Stok</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -17,7 +17,7 @@
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                 <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg>
-            Gudang Listrik
+            Lampu Mitsuyama
         </div>
         
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" style="display: flex; align-items: center; gap: 10px;">

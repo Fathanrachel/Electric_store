@@ -11,8 +11,13 @@ class Product extends Model
 
     protected $fillable = [
         'sku', 'name', 'category_id', 'unit', 'purchase_price', 
-        'selling_price', 'min_stock', 'current_stock'
+        'selling_price', 'min_stock', 'current_stock', 'is_active'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 
     public function category()
     {

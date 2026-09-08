@@ -19,5 +19,6 @@ Route::prefix('transactions')->name('transactions.')->group(function () {
 
 // Stok & Laporan
 Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+Route::post('/stock/{product}/toggle-active', [StockController::class, 'toggleActive'])->name('stock.toggle-active');
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
